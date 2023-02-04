@@ -4,6 +4,8 @@
 module constant(output logic a2, a3, a4, a5,
                 input logic clk, n_rst);
 
+parameter OFFSET = 0;
+
 
 int i = 0;
 
@@ -19,7 +21,7 @@ assign a5 = buffer_a5[i];
 
 always_ff @(posedge clk, negedge n_rst) begin
     if (~n_rst)
-        i <= 0;
+        i <= OFFSET;
     else
         i <= (i + 1) % 512;
 end
