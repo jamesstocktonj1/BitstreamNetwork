@@ -20,7 +20,7 @@ constant constants_generator(
     .a4(a4),
     .a5(a5)
 );
-constants_generator.OFFSET = OFFSET;
+defparam constants_generator.OFFSET = OFFSET;
 
 // generates e^-4
 exp_const const_exponential(
@@ -28,7 +28,7 @@ exp_const const_exponential(
     .n_rst(n_rst),
     .y(const_exp)
 );
-const_exponential.OFFSET = OFFSET;
+defparam const_exponential.OFFSET = OFFSET;
 
 // generates e^-x
 exp x_exponential(
