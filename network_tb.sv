@@ -143,8 +143,6 @@ initial begin
     clk = 1'b0;
     n_rst = 1'b1;
 
-    val_rst = 1'b1;
-
     #20ps n_rst = 1'b0;
     #20ps n_rst = 1'b1;
 end
