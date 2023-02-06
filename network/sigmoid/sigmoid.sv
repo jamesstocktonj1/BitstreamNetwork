@@ -11,6 +11,11 @@ logic const_exp;
 logic x_exp;
 logic x_exp_n;
 
+logic a2;
+logic a3;
+logic a4;
+logic a5;
+
 // generates constants for exponential
 constant constants_generator(
     .clk(clk),
