@@ -38,9 +38,6 @@ always_ff @(posedge clk)
 always_comb begin
     neuron_mult = neuron_weights && neuron_input;
 
-    // for(int j=0; j<INPUT_SIZE; j++)
-    //     neuron_mult[j] = neuron_weights[j] && neuron_output[j];
-
     neuron_sum = 1'b0;
     for(int j=0; j<INPUT_SIZE; j++)
         neuron_sum |= neuron_mult[j];
