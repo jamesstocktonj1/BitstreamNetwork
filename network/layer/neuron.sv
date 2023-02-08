@@ -20,33 +20,16 @@ sigmoid activation_function(
     .y(neuron_active)
 );
 
-// generate
-//     genvar i;
-//     for(i=0; i<INPUT_SIZE; i++) begin
-//         weight #(.OFFSET(OFFSET), .WEIGHT_LEN(WEIGHT_LEN), .WEIGHT_VAL(WEIGHT_VALS[i])) weight_gen(
-//             .clk(clk),
-//             .n_rst(n_rst),
-//             .y(neuron_weights[i])
-//         );
-//         // defparam weight_gen.OFFSET = OFFSET;
-//         // defparam weight_gen.WEIGHT_LEN = WEIGHT_LEN;
-//         // defparam weight_gen.WEIGHT_VAL = WEIGHT_VALS[i];
-//     end
-// endgenerate
-
-weight #(.OFFSET(OFFSET), .WEIGHT_LEN(WEIGHT_LEN)) weight_gen1(
-    .clk(clk),
-    .n_rst(n_rst),
-    .weight_value(weight_values[0]),
-    .y(neuron_weights[0])
-);
-
-weight #(.OFFSET(OFFSET), .WEIGHT_LEN(WEIGHT_LEN)) weight_gen2(
-    .clk(clk),
-    .n_rst(n_rst),
-    .weight_value(weight_values[1]),
-    .y(neuron_weights[1])
-);
+generate
+    genvar i;
+    for(i=0; i<INPUT_SIZE; i++)
+        weight #(.OFFSET(OFFSET), .WEIGHT_LEN(WEIGHT_LEN)) weight_gen(
+            .clk(clk),
+            .n_rst(n_rst),
+            .weight_value(weight_values[i]),
+            .y(neuron_weights[i])
+        );
+endgenerate
 
 
 always_ff @(posedge clk)
