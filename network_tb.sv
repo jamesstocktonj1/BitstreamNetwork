@@ -131,8 +131,9 @@ parameter weight_length = 128;
 logic [weight_length-1:0] w1 = 128'b00001001100010100010001100000100100000000111010110001001110010111101101010000001001010010000100101101101100000101001011100011101;
 logic [weight_length-1:0] w2 = 128'b11101111000111011101010101101001001101101010010101111110111001101111101110110111010011001010011101000011101101110010101010110110;
 
-assign x1 = test_data3[j+1][i];
-assign x2 = test_data3[k+1][i];
+const int data_length = 1024;
+assign x1 = test_data2[j][i];
+assign x2 = test_data2[k][i];
 assign x = {x1, x2};
 
 
@@ -164,13 +165,13 @@ always #10ps clk = ~clk;
 
 always_ff @(posedge clk) begin
 
-    if(i < 4095) begin
+    if(i < (data_length-1)) begin
         i++;
         if(y)
             value++;
     end
     else begin
-        val <= real'(value / 4096);
+        val <= real'(value / (data_length));
         $fwrite(dataFile, "%f\n", val);
 
         i <= 0;
