@@ -3,14 +3,16 @@
 
 module network_tb;
 
-logic x;
-logic z;
+logic x1;
+logic x2;
+logic [1:0] x;
 logic y;
 logic clk;
 logic n_rst;
 
 int i = 0;
 int j = 0;
+int k = 0;
 
 real val = 0.0;
 real value = 0.0;
@@ -125,16 +127,29 @@ logic [4095:0] test_data3 [0:50] = {
 };
 
 
-assign x = test_data3[j][i];
+parameter weight_length = 128;
+logic [weight_length-1:0] w1 = 128'b00001001100010100010001100000100100000000111010110001001110010111101101010000001001010010000100101101101100000101001011100011101;
+logic [weight_length-1:0] w2 = 128'b11101111000111011101010101101001001101101010010101111110111001101111101110110111010011001010011101000011101101110010101010110110;
+
+assign x1 = test_data3[j+1][i];
+assign x2 = test_data3[k+1][i];
+assign x = {x1, x2};
 
 
-sigmoid sig(
-    .x(x),
-    .y(y),
+
+neuron n(
     .clk(clk),
-    .n_rst(n_rst)
+    .n_rst(n_rst),
+    .neuron_input(x),
+    .neuron_output(y)
 );
-defparam sig.OFFSET = 0;
+defparam n.INPUT_SIZE = 2;
+defparam n.OFFSET = 0;
+defparam n.WEIGHT_LEN = weight_length;
+defparam n.WEIGHT_VALS = {
+    128'b00001001100010100010001100000100100000000111010110001001110010111101101010000001001010010000100101101101100000101001011100011101,
+    128'b11101111000111011101010101101001001101101010010101111110111001101111101110110111010011001010011101000011101101110010101010110110
+};
 
 
 initial begin
@@ -158,17 +173,23 @@ always_ff @(posedge clk) begin
             value++;
     end
     else begin
-        val <= real'(value / i);
+        val <= real'(value / 4096);
         $fwrite(dataFile, "%f\n", val);
 
+        i <= 0;
         value <= 0.0;
 
-        i <= 0;
         if(j < 49)
             j++;
         else begin
-            $fclose(dataFile);
-            $stop();
+            j <= 0;
+
+            if(k < 49)
+                k++;
+            else begin
+                $fclose(dataFile);
+                $stop();
+            end
         end
     end
 end
