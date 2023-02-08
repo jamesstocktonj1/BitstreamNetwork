@@ -1,17 +1,14 @@
 
 
 
-module weight(output logic y,
+module weight #(WEIGHT_LEN = 16, OFFSET = 0)(output logic y,
+              input logic [WEIGHT_LEN-1:0] weight_value,
               input logic clk, n_rst);
-
-parameter OFFSET = 0;
-parameter WEIGHT_LEN = 16;
-parameter [WEIGHT_LEN-1:0] WEIGHT_VAL = 16'b0000000000000000;
 
 
 int i = OFFSET;
 
-assign y = WEIGHT_VAL[i];
+assign y = weight_value[i];
 
 always_ff @(posedge clk, negedge n_rst) begin
     if(~n_rst)
