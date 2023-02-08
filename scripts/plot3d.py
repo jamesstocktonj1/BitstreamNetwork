@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import sys
-
+from scipy.ndimage import gaussian_filter
 
 
 def load_file(filename):
@@ -29,8 +29,10 @@ def plot_data(filename):
 
     neuronPlane = data.reshape((50, 50))
 
-    # surf = fig1.plot_surface(x_t, y_t, neuronPlane, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-    surf = fig1.plot_surface(x_t, y_t, neuronPlane, cmap=cm.coolwarm, rstride=1, cstride=1, alpha=None, antialiased=True)
+    neuronSmooth = gaussian_filter(neuronPlane, sigma=2)
+
+    # surf = fig1.plot_surface(x_t, y_t, neuronPlane, cmap=cm.coolwarm, rstride=1, cstride=1, alpha=None, antialiased=True)
+    surf = fig1.plot_surface(x_t, y_t, neuronSmooth, cmap=cm.coolwarm, rstride=1, cstride=1, alpha=None, antialiased=True)
 
     fig.colorbar(surf)
     plt.show()
