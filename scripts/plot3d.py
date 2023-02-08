@@ -15,7 +15,7 @@ def load_file(filename):
     return data
 
 
-def plot_data(filename):
+def plot_data(filename, smooth):
     fig = plt.figure()
     fig1 = fig.add_subplot(projection='3d')
 
@@ -31,8 +31,10 @@ def plot_data(filename):
 
     neuronSmooth = gaussian_filter(neuronPlane, sigma=2)
 
-    # surf = fig1.plot_surface(x_t, y_t, neuronPlane, cmap=cm.coolwarm, rstride=1, cstride=1, alpha=None, antialiased=True)
-    surf = fig1.plot_surface(x_t, y_t, neuronSmooth, cmap=cm.coolwarm, rstride=1, cstride=1, alpha=None, antialiased=True)
+    if smooth:
+        surf = fig1.plot_surface(x_t, y_t, neuronSmooth, cmap=cm.coolwarm, rstride=1, cstride=1, alpha=None, antialiased=True)
+    else:
+        surf = fig1.plot_surface(x_t, y_t, neuronPlane, cmap=cm.coolwarm, rstride=1, cstride=1, alpha=None, antialiased=True)
 
     fig.colorbar(surf)
     plt.show()
@@ -43,4 +45,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("please specify file")
     else:
-        plot_data(sys.argv[1])
+        plot_data(sys.argv[1], True)
