@@ -19,7 +19,6 @@ always_ff @(posedge clk, negedge n_rst) begin
         lfsr <= SEED;
     else
         lfsr <= {lfsr[0] ^ lfsr[2] ^ lfsr[5] ^ lfsr[6], lfsr[LENGTH-1:1]};
-    $display("Value: %d", int'(lfsr));
 end
 
 endmodule
