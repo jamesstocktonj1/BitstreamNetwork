@@ -12,13 +12,12 @@ logic n_rst;
 
 int i = 0;
 int j = 0;
+int k = 0;
 
 real val = 0.0;
 real value = 0.0;
 
 int dataFile;
-
-const int data_length = 256;
 
 
 int points_data1 [0:249] = {
@@ -531,15 +530,15 @@ int points_data2 [0:249] = {
 generator x1_gen(
 	.clk(clk),
 	.n_rst(n_rst),
-	.x(points_data1[j]),
+	.x(j * 5),
 	.y(x1)
 );
-defparam x1_gen.SEED = 0'b101010;
+// defparam x1_gen.SEED = 0'b101010;
 
 generator x2_gen(
 	.clk(clk),
 	.n_rst(n_rst),
-	.x(points_data2[j]),
+	.x(k * 5),
 	.y(x2)
 );
 
@@ -568,23 +567,28 @@ always #10ps clk = ~clk;
 
 always_ff @(posedge clk) begin
 
-    if(i < (data_length-1)) begin
+    if(i < 256) begin
         i++;
         if(y)
             value++;
     end
     else begin
-        val <= real'(value / (data_length));
+        val <= real'(value / 256);
         $fwrite(dataFile, "%f\n", val);
 
         i <= 0;
         value <= 0.0;
 
-        if(j < 249)
+        if(j < 49)
             j++;
         else begin
-            $fclose(dataFile);
-            $stop();
+			j <= 0;
+			if(k < 49)
+				k++;
+			else begin
+				$fclose(dataFile);
+            	$stop();
+			end
         end
     end
 end
