@@ -1,17 +1,23 @@
 
 
 
-module integrator(output integer y,
-                  input logic x, clk, n_rst);
+module integrator(output int y,
+                  input logic x, capture, clk, n_rst);
 
+int count = 0;
 
-always_ff @(posedge clk, negedge n_rst) begin
-    if(~n_rst)
+always_ff @(posedge clk, negedge n_rst, negedge capture) begin
+    if(~n_rst) begin
         y <= 0;
-    else begin
-        if(x)
-            y <= y + 1;
+        count <= 0;
     end
+    else if(~capture) begin
+        y <= count;
+        count <= 0;
+    end
+    else
+        if(x)
+            count <= count + 1;
 end
 
 endmodule
