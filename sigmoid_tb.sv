@@ -4,6 +4,9 @@
 module sigmoid_tb;
 
 
+const int bitstream_length = 256;
+
+
 logic clk;
 logic n_rst;
 
@@ -22,6 +25,7 @@ generator x_gen(
     .x(x),
     .y(z)
 );
+defparam x_gen.SEED = 8'b10001100;
 
 sigmoid sig(
     .clk(clk),
@@ -42,7 +46,7 @@ initial begin
 
     for(x=0; x<256; x++) begin
         value = 0;
-        for(int i=0; i<256; i++) begin
+        for(int i=0; i<bitstream_length; i++) begin
             #10ps clk = ~clk;
             #10ps clk = ~clk;
 
@@ -50,7 +54,7 @@ initial begin
                 value++;
         end
 
-        $fwrite(dataFile, "%f\n", value/256);
+        $fwrite(dataFile, "%f\n", value/bitstream_length);
     end
 
     $fclose();

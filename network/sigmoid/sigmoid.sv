@@ -28,12 +28,28 @@ constant constants_generator(
 defparam constants_generator.OFFSET = OFFSET;
 
 // generates e^-4
-exp_const const_exponential(
+// exp_const const_exponential(
+//     .clk(clk),
+//     .n_rst(n_rst),
+//     .y(const_exp)
+// );
+// defparam const_exponential.OFFSET = OFFSET;
+
+// generates e^-4
+generator const_exponential(
     .clk(clk),
     .n_rst(n_rst),
+    .x(5),
     .y(const_exp)
 );
-defparam const_exponential.OFFSET = OFFSET;
+
+// generates e^-4
+// generator_exp const_exponential(
+//     .clk(clk),
+//     .n_rst(n_rst),
+//     .y(const_exp)
+// );
+defparam const_exponential.SEED = 8'b1010100;
 
 // generates e^-x
 exp x_exponential(
