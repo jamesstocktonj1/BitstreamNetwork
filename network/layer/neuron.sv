@@ -1,10 +1,10 @@
 
 
 
-module neuron #(INPUT_SIZE = 2, OFFSET = 0, WEIGHT_LEN = 16)
+module neuron #(INPUT_SIZE = 2, SEED = 0)
             (output logic neuron_output,
              input logic [INPUT_SIZE-1:0] neuron_input,
-             input logic [WEIGHT_LEN-1:0] weight_values [INPUT_SIZE-1:0],
+             input int weight_values [INPUT_SIZE-1:0],
              input logic clk, n_rst);
 
 logic [INPUT_SIZE-1:0] neuron_weights;
@@ -23,10 +23,10 @@ sigmoid activation_function(
 generate
     genvar i;
     for(i=0; i<INPUT_SIZE; i++)
-        weight #(.OFFSET(OFFSET), .WEIGHT_LEN(WEIGHT_LEN)) weight_gen(
+        generator #(.SEED(SEED + i)) weight_gen(
             .clk(clk),
             .n_rst(n_rst),
-            .weight_value(weight_values[i]),
+            .x(weight_values[i]),
             .y(neuron_weights[i])
         );
 endgenerate
