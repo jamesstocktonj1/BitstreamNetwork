@@ -48,6 +48,8 @@ logic [7:0] control_out;
 int data_in [0:1] = '{124, 82};
 int data_out [0:0];
 
+logic [3:0] value0, value1, value2, value3, value4, value5 = 4'b0000;
+
 
 // assign logic signals
 assign clk = KEY[0];
@@ -57,6 +59,19 @@ assign control_in = SW[7:0];
 assign LEDR[7:0] = control_out;
 
 assign LEDR[8] = ~(data_out[0] == 0);
+
+assign value3 = (data_out[0] / 100) % 10;
+assign value4 = (data_out[0] / 10) % 10;
+assign value5 = data_out[0] % 10;
+
+
+// define hex displays
+seven_segment hex0 (.hex(HEX0), .value(value0));
+seven_segment hex1 (.hex(HEX1), .value(value1));
+seven_segment hex2 (.hex(HEX2), .value(value2));
+seven_segment hex3 (.hex(HEX3), .value(value3));
+seven_segment hex4 (.hex(HEX4), .value(value4));
+seven_segment hex5 (.hex(HEX5), .value(value5));
 
 
 // bitstream neural network
