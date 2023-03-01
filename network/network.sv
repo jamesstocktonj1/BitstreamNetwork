@@ -1,50 +1,76 @@
 
 
 
-module network #(INPUT_SIZE = 2, OUTPUT_SIZE = 1)
-            (output int [OUTPUT_SIZE-1:0] network_output,
-             input int [INPUT_SIZE-1:0] network_input,
+module network #(INPUT_SIZE = 2, OUTPUT_SIZE = 1, SEED = 0'b1101010)
+            (output int network_output [0:OUTPUT_SIZE-1],
+             input int network_input [0:INPUT_SIZE-1],
              input logic clk, n_rst, compute);
 
-parameter WEIGHT_LENGTH = 128;
 parameter layer12_size = 2;
-// const int WEIGHT_LENGTH = 128;
 
 // const int layer12_size = 2;
+logic [INPUT_SIZE-1:0] network_bitstream_input;
+logic [OUTPUT_SIZE-1:0] network_bitstream_output;
 logic [layer12_size-1:0] layer12_connect;
 
+
 // layer 1 neuron 1
-logic [WEIGHT_LENGTH-1:0] w11 [0:INPUT_SIZE-1] = {
-    128'b01100111001001011111000011100110011111110111111010111110111010111110111110101001111110110111011100010011011101111100111100101111,
-    128'b01001111100100000101011011110001000101011111010111000101110011101000000010011100111010111010011000001111100110001100110101101010
+int w11 [0:INPUT_SIZE-1] = {
+    172,
+    130
 };
+
 // layer 1 neuron 2
-logic [WEIGHT_LENGTH-1:0] w12 [0:INPUT_SIZE-1] = {
-    128'b01110001001101010010110010101011010100000001011010011111100101001101100001010011001000101110111111010010100011000100011100001000,
-    128'b01001001011010100101000110100010000010001010000101110000100100100001000000010001110010110111101111001101100110000100010000011001
+int w12 [0:INPUT_SIZE-1] = {
+    118,
+    100
 };
 
 // layer 2 neuron
-logic [WEIGHT_LENGTH-1:0] w2 [0:layer12_size-1] = {
-    128'b10010110101001101110100000011010111000011111110111111110110001110000001110100100001101111111111011111001101100001100001101100011,
-    128'b01111101110001001101010100000000101101000011000101111100001001010010111110000100110000110001001101110000000111001001010110101000
+int w2 [0:layer12_size-1] = {
+    144,
+    111
 };
 
+generate
+    genvar i;
+    for(i=0; i<INPUT_SIZE; i++)
+        generator #(.SEED(0'b0101001010 + i)) bitstream_gen(
+            .clk(clk),
+            .n_rst(n_rst),
+            .x(network_input[i]),
+            .y(network_bitstream_input[i])
+        );
+endgenerate
 
-layer #(.INPUT_SIZE(INPUT_SIZE), .NEURON_COUNT(layer12_size), .WEIGHT_LEN(WEIGHT_LENGTH)) layer1 (
+
+layer #(.INPUT_SIZE(INPUT_SIZE), .NEURON_COUNT(layer12_size), .SEED(SEED)) layer1 (
     .clk(clk),
     .n_rst(n_rst),
     .layer_weights({w11, w12}),
-    .layer_input(network_input),
+    .layer_input(network_bitstream_input),
     .layer_output(layer12_connect)
 );
 
-layer #(.INPUT_SIZE(layer12_size), .NEURON_COUNT(OUTPUT_SIZE), .WEIGHT_LEN(WEIGHT_LENGTH)) layer2 (
+layer #(.INPUT_SIZE(layer12_size), .NEURON_COUNT(OUTPUT_SIZE), .SEED(SEED + (layer12_size * OUTPUT_SIZE))) layer2 (
     .clk(clk),
     .n_rst(n_rst),
     .layer_weights({w2}),
     .layer_input(layer12_connect),
-    .layer_output(network_output)
+    .layer_output(network_bitstream_output)
 );
+
+
+generate
+    genvar j;
+    for(j=0; j<OUTPUT_SIZE; j++)
+        integrator bitstream_int(
+            .clk(clk),
+            .n_rst(n_rst),
+            .capture(compute),
+            .x(network_bitstream_output[j]),
+            .y(network_output[j])
+        );
+endgenerate
 
 endmodule
