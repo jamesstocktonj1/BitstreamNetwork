@@ -50,7 +50,7 @@ always_ff @(posedge clk, negedge n_rst) begin
     else if(compute_value)
         bitstream_place <= bitstream_place + 1;
     else
-        bitstream_place <= bitstream_place;
+        bitstream_place <= 0;
 end
 
 
