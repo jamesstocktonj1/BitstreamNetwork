@@ -2,9 +2,9 @@
 
 
 module network #(INPUT_SIZE = 2, OUTPUT_SIZE = 1)
-            (output logic [OUTPUT_SIZE-1:0] network_output,
-             input logic [INPUT_SIZE-1:0] network_input,
-             input logic clk, n_rst);
+            (output int [OUTPUT_SIZE-1:0] network_output,
+             input int [INPUT_SIZE-1:0] network_input,
+             input logic clk, n_rst, compute);
 
 parameter WEIGHT_LENGTH = 128;
 parameter layer12_size = 2;
