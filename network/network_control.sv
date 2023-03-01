@@ -1,9 +1,11 @@
 
 
 
-module network_control(input [7:0] control_in,
+module network_control #(INPUT_SIZE=2, OUTPUT_SIZE=1)(input logic [7:0] control_in,
                        input logic clk, n_rst,
-                       output [7:0] control_out);
+                       output logic [7:0] control_out,
+                       input int data_in [0:INPUT_SIZE-1],
+                       output int data_out [0:OUTPUT_SIZE-1]);
 
 parameter BITSTREAM_LENGTH = 256;
 
@@ -28,6 +30,17 @@ assign control_out[7:6] = state;
 logic compute_value, n_netrst;
 int bitstream_place;
 assign n_netrst = (~ctrl_rst) && n_rst;
+
+
+
+// network instance
+network net(
+    .clk(clk),
+    .n_rst(n_netrst),
+    .compute(compute_value),
+    .network_input(data_in),
+    .network_output(data_out)
+);
 
 
 // bitstream place incrementer

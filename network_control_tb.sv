@@ -9,12 +9,16 @@ logic clk, n_rst;
 logic [7:0] control_in;
 logic [7:0] control_out;
 
+int data_in [1:0];
+int data_out [0:0];
 
 network_control my_network(
     .clk(clk),
     .n_rst(n_rst), 
     .control_in(control_in),
-    .control_out(control_out)
+    .control_out(control_out),
+    .data_in(data_in),
+    .data_out(data_out)
 );
 
 
@@ -31,6 +35,7 @@ end
 initial begin
 
     control_in = 8'b0;
+    data_in = {22, 210};
 
     #50ps control_in = 8'b00000001;
     #50ps control_in = 8'b00000000;
