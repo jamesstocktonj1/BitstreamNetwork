@@ -10,7 +10,7 @@ module layer #(INPUT_SIZE = 2, SEED = 0, NEURON_COUNT = 2)
 
 generate
     genvar i;
-    for(i=0; i<NEURON_COUNT; i++)
+    for(i=0; i<NEURON_COUNT; i++) begin : neuron_block
         neuron #(.INPUT_SIZE(INPUT_SIZE), .SEED(SEED + (i * NEURON_COUNT))) neuron_gen(
             .clk(clk),
             .n_rst(n_rst),
@@ -18,6 +18,7 @@ generate
             .neuron_input(layer_input),
             .neuron_output(layer_output[i])
         );
+    end
 endgenerate
 
 endmodule

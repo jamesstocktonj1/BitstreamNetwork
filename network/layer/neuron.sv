@@ -22,13 +22,14 @@ sigmoid activation_function(
 
 generate
     genvar i;
-    for(i=0; i<INPUT_SIZE; i++)
+    for(i=0; i<INPUT_SIZE; i++) begin : weight_block
         generator #(.SEED(SEED + i)) weight_gen(
             .clk(clk),
             .n_rst(n_rst),
             .x(weight_values[i]),
             .y(neuron_weights[i])
         );
+    end
 endgenerate
 
 

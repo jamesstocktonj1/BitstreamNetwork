@@ -52,7 +52,7 @@ generator const_exponential(
 defparam const_exponential.SEED = 8'b1010100;
 
 // generates e^-x
-exp x_exponential(
+exponential x_exponential(
     .clk(clk),
     .n_rst(n_rst),
     .a2(a2),

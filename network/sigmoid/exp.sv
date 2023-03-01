@@ -1,7 +1,7 @@
 
 
 
-module exp(output logic y,
+module exponential(output logic y,
            input logic clk, n_rst, x, a2, a3, a4, a5);
 
 
