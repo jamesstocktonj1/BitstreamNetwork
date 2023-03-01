@@ -24,7 +24,7 @@ end
 always_ff @(posedge clk, negedge n_rst) begin
     if(~n_rst)
         count <= 0;
-    else if(increment || show) begin
+    else if(increment) begin
         if(x)
             count <= count + 1;
     end
@@ -50,9 +50,8 @@ always_comb begin
 
     case(state)
         IDLE: begin
-            clear = 1'b1;
             if(capture) begin
-                increment = 1'b1;
+                clear = 1'b1;
                 next_state = READING;
             end
             else
