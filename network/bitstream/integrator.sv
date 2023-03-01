@@ -6,18 +6,72 @@ module integrator(output int y,
 
 int count = 0;
 
-always_ff @(posedge clk, negedge n_rst, negedge capture) begin
-    if(~n_rst) begin
+logic increment, show, clear;
+
+typedef enum logic [1:0] {IDLE, READING, OUTPUT} int_state;
+int_state state, next_state = IDLE;
+
+
+// output block
+always_ff @(posedge clk, negedge n_rst) begin
+    if(~n_rst)
         y <= 0;
-        count <= 0;
-    end
-    else if(~capture) begin
+    else if(show)
         y <= count;
+end
+
+// incrementing block
+always_ff @(posedge clk, negedge n_rst) begin
+    if(~n_rst)
         count <= 0;
-    end
-    else
+    else if(increment || show) begin
         if(x)
             count <= count + 1;
+    end
+    else if(clear)
+        count <= 0;
+end
+
+// state machine control
+always_ff @(posedge clk, negedge n_rst) begin
+    if(~n_rst)
+        state <= IDLE;
+    else
+        state <= next_state;
+end
+
+// state machine
+always_comb begin
+    increment = 1'b0;
+    show = 1'b0;
+    clear = 1'b0;
+
+    next_state = state;
+
+    case(state)
+        IDLE: begin
+            clear = 1'b1;
+            if(capture) begin
+                increment = 1'b1;
+                next_state = READING;
+            end
+            else
+                next_state = IDLE;
+        end
+
+        READING: begin
+            increment = 1'b1;
+            if(capture)
+                next_state = READING;
+            else
+                next_state = OUTPUT;
+        end
+
+        OUTPUT: begin
+            show = 1'b1;
+            next_state = IDLE;
+        end
+    endcase
 end
 
 endmodule
