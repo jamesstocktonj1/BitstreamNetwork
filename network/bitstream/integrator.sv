@@ -22,7 +22,9 @@ end
 
 // incrementing block
 always_ff @(posedge clk, negedge n_rst) begin
-    if(~n_rst || clear)
+    if(~n_rst)
+        count <= 0;
+	else if(clear)
         count <= 0;
     else if(increment && x) begin
         count <= count + 1;
