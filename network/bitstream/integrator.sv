@@ -22,14 +22,11 @@ end
 
 // incrementing block
 always_ff @(posedge clk, negedge n_rst) begin
-    if(~n_rst)
+    if(~n_rst || clear)
         count <= 0;
-    else if(increment) begin
-        if(x)
-            count <= count + 1;
+    else if(increment && x) begin
+        count <= count + 1;
     end
-    else if(clear)
-        count <= 0;
 end
 
 // state machine control
@@ -50,10 +47,9 @@ always_comb begin
 
     case(state)
         IDLE: begin
-            if(capture) begin
-                clear = 1'b1;
+            clear = 1'b1;
+            if(capture)
                 next_state = READING;
-            end
             else
                 next_state = IDLE;
         end
