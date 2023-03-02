@@ -55,15 +55,17 @@ always_comb begin
         end
 
         READING: begin
-            increment = 1'b1;
-            if(capture)
+            if(capture) begin
+                increment = 1'b1;
                 next_state = READING;
-            else
+            end
+            else begin
+                show = 1'b1;
                 next_state = OUTPUT;
+            end
         end
 
         OUTPUT: begin
-            show = 1'b1;
             next_state = IDLE;
         end
     endcase
