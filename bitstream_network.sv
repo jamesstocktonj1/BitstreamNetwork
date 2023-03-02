@@ -61,9 +61,11 @@ assign LEDR[7:0] = control_out;
 assign LEDR[8] = ~(data_out[0] == 0);
 assign LEDR[9] = clk;
 
-assign value3 = (data_out[0] / 100) % 10;
+assign {value1, value0} = control_out;
+
+assign value5 = (data_out[0] / 100) % 10;
 assign value4 = (data_out[0] / 10) % 10;
-assign value5 = data_out[0] % 10;
+assign value3 = data_out[0] % 10;
 
 
 // define hex displays
@@ -80,6 +82,7 @@ clock_divide clk50_div (
     .n_rst(n_rst),
     .y(clk)
 );
+defparam clk50_div.DIVIDE = 250;
 
 // bitstream neural network
 network_control my_network(
