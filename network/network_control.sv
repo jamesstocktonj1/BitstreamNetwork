@@ -29,7 +29,8 @@ assign control_out[7:6] = state;
 // local state variables
 logic compute_value, n_netrst;
 int bitstream_place;
-assign n_netrst = (~ctrl_rst) && n_rst;
+assign n_netrst = n_rst;
+// assign n_netrst = (~ctrl_rst) && n_rst;
 
 
 
@@ -93,7 +94,10 @@ always_comb begin
         INTEGRATE: begin
             compute_value = 1'b0;
             finish_compute = 1'b1;
-            next_state = IDLE;
+            if(~start_compute)
+                next_state = IDLE;
+            else
+                next_state = INTEGRATE;
         end
     endcase
 end
