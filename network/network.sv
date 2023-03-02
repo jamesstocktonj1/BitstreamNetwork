@@ -17,7 +17,7 @@ logic [layer12_size-1:0] layer12_connect;
 // layer 1
 int w1 [0:layer12_size-1][0:INPUT_SIZE-1] = '{
     '{172, 130},
-	 '{118, 100}
+	'{118, 100}
 };
 
 // layer 2 neuron
