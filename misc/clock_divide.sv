@@ -17,6 +17,7 @@ always_ff @(posedge clk, negedge n_rst) begin
     else if(count > DIVIDE) begin
         y <= ~y;
         count <= 0;
+    end
     else 
         count <= count + 1;
 end
