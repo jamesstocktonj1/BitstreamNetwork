@@ -52,13 +52,14 @@ logic [3:0] value0, value1, value2, value3, value4, value5 = 4'b0000;
 
 
 // assign logic signals
-assign clk = KEY[0];
+// assign clk = KEY[0];
 assign n_rst = KEY[1];
 
 assign control_in = SW[7:0];
 assign LEDR[7:0] = control_out;
 
 assign LEDR[8] = ~(data_out[0] == 0);
+assign LEDR[9] = clk;
 
 assign value3 = (data_out[0] / 100) % 10;
 assign value4 = (data_out[0] / 10) % 10;
@@ -73,6 +74,12 @@ seven_segment hex3 (.hex(HEX3), .value(value3));
 seven_segment hex4 (.hex(HEX4), .value(value4));
 seven_segment hex5 (.hex(HEX5), .value(value5));
 
+
+clock_divide clk50_div (
+    .clk(CLOCK_50),
+    .n_rst(n_rst),
+    .y(clk)
+);
 
 // bitstream neural network
 network_control my_network(
