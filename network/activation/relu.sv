@@ -15,6 +15,7 @@ locallfsr half_gen(
     .n_rst(n_rst),
     .y(b)
 );
+defparam half_gen.SEED = SEED;
 
 always_ff @(posedge clk, negedge n_rst) begin
     if(~n_rst) begin
@@ -38,6 +39,7 @@ parameter SEED = 4'b0010;
 
 logic [3:0] lfsr;
 
+// set to 9 for ReLU, set to 10 for Leaky ReLU
 assign y = (lfsr < 9);
 
 always_ff @(posedge clk, negedge n_rst) begin
