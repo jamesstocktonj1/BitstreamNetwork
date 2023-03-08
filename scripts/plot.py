@@ -20,9 +20,16 @@ def plot_data(filename):
     data = data[2:]
 
     x = np.arange(len(data)) / len(data)
-    y = 1 / (1 + np.exp((-8 * x) + 4))
-    # y = np.exp(-3.5) / (np.exp(-3.5) + np.exp(-8.5 * x))
-    # y = np.exp(-8 * x)
+    # y = 1 / (1 + np.exp((-8 * x) + 4))
+    # y = np.exp(-6) / (np.exp(-6) + np.exp(-12 * x))
+    # y = np.maximum(0.5, x)
+    # y = np.exp(-12 * x)
+    # y = np.exp(-4 + (0 * x))
+    
+    y = np.zeros(len(data))
+    y[np.where(0.5 < x)] = (1.2 * x[np.where(0.5 < x)]) - 0.6
+    y[np.where(0.75 < x)] = (2.8 * x[np.where(0.75 < x)]) - 1.8
+
 
     plt.plot(x, data)
     plt.plot(x, y)
