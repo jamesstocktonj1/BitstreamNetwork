@@ -5,25 +5,35 @@ module neuron #(INPUT_SIZE = 2, SEED = 0)
             (output logic neuron_output,
              input logic [INPUT_SIZE-1:0] neuron_input,
              input int weight_values [INPUT_SIZE-1:0],
+             input int bias_value,
              input logic clk, n_rst);
 
 logic [INPUT_SIZE-1:0] neuron_weights;
 logic [INPUT_SIZE-1:0] neuron_mult;
+logic neuron_bias;
 logic neuron_sum;
 logic neuron_active;
 
 
-sigmoid activation_function(
+relu activation_function(
     .clk(clk),
     .n_rst(n_rst),
     .x(neuron_sum),
     .y(neuron_active)
 );
+defparam activation_function.SEED = SEED;
+
+generator #(.SEED(SEED+1)) bias_gen(
+    .clk(clk),
+    .n_rst(n_rst),
+    .x(bias_value),
+    .y(neuron_bias)
+);
 
 generate
     genvar i;
     for(i=0; i<INPUT_SIZE; i++) begin : weight_block
-        generator #(.SEED(SEED + i)) weight_gen(
+        generator #(.SEED(SEED + i + 2)) weight_gen(
             .clk(clk),
             .n_rst(n_rst),
             .x(weight_values[i]),
@@ -39,7 +49,7 @@ always_ff @(posedge clk)
 always_comb begin
     neuron_mult = neuron_weights && neuron_input;
 
-    neuron_sum = 1'b0;
+    neuron_sum = neuron_bias;
     for(int j=0; j<INPUT_SIZE; j++)
         neuron_sum |= neuron_mult[j];
 end
