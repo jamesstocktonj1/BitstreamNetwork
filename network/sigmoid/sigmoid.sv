@@ -4,7 +4,7 @@
 module sigmoid(output logic y,
                input logic x, clk, n_rst);
 
-parameter OFFSET = 0;
+parameter SEED = 0'b11010101;
 
 
 logic const_exp;
@@ -18,26 +18,26 @@ logic a4;
 logic a5;
 
 // generates constants for exponential
-// constant constants_generator(
-//     .clk(clk),
-//     .n_rst(n_rst),
-//     .a2(a2),
-//     .a3(a3),
-//     .a4(a4),
-//     .a5(a5)
-// );
+constant constants_generator(
+    .clk(clk),
+    .n_rst(n_rst),
+    .a2(a2),
+    .a3(a3),
+    .a4(a4),
+    .a5(a5)
+);
 // defparam constants_generator.OFFSET = OFFSET;
 
 // generates constants for exponential
-generator a2_gen(.clk(clk), .n_rst(n_rst), .x(128), .y(a2));
-generator a3_gen(.clk(clk), .n_rst(n_rst), .x(85), .y(a3));
-generator a4_gen(.clk(clk), .n_rst(n_rst), .x(64), .y(a4));
-generator a5_gen(.clk(clk), .n_rst(n_rst), .x(51), .y(a5));
+// generator a2_gen(.clk(clk), .n_rst(n_rst), .x(128), .y(a2));
+// generator a3_gen(.clk(clk), .n_rst(n_rst), .x(85), .y(a3));
+// generator a4_gen(.clk(clk), .n_rst(n_rst), .x(64), .y(a4));
+// generator a5_gen(.clk(clk), .n_rst(n_rst), .x(51), .y(a5));
 
-defparam a2_gen.SEED = 8'b10001101;
-defparam a3_gen.SEED = 8'b10001111;
-defparam a4_gen.SEED = 8'b10010001;
-defparam a5_gen.SEED = 8'b10010010;
+// defparam a2_gen.SEED = (8'b10001101 + SEED) % 0'b11111111;
+// defparam a3_gen.SEED = (8'b10001111 + SEED) % 0'b11111111;
+// defparam a4_gen.SEED = (8'b10010001 + SEED) % 0'b11111111;
+// defparam a5_gen.SEED = (8'b10010010 + SEED) % 0'b11111111;
 
 // generates e^-4
 // exp_const const_exponential(
@@ -48,20 +48,20 @@ defparam a5_gen.SEED = 8'b10010010;
 // defparam const_exponential.OFFSET = OFFSET;
 
 // generates e^-4
-generator const_exponential(
-    .clk(clk),
-    .n_rst(n_rst),
-    .x(94),
-    .y(const_exp)
-);
-
-// generates e^-4
-// generator_exp const_exponential(
+// generator const_exponential(
 //     .clk(clk),
 //     .n_rst(n_rst),
+//     .x(94),
 //     .y(const_exp)
 // );
-defparam const_exponential.SEED = 8'b10001100;
+
+// generates e^-4
+generator_exp const_exponential(
+    .clk(clk),
+    .n_rst(n_rst),
+    .y(const_exp)
+);
+// defparam const_exponential.SEED = (8'b10001100 + SEED) % 0'b11111111;
 
 // generates e^-x
 exponential x_exponential(
