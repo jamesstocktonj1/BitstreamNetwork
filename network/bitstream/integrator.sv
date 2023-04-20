@@ -24,12 +24,11 @@ end
 always_ff @(posedge clk, negedge n_rst) begin
     if(~n_rst)
         count <= 0;
-    else if(increment || show) begin
-        if(x)
-            count <= count + 1;
-    end
-    else if(clear)
+	else if(clear)
         count <= 0;
+    else if(increment && x) begin
+        count <= count + 1;
+    end
 end
 
 // state machine control
@@ -51,24 +50,24 @@ always_comb begin
     case(state)
         IDLE: begin
             clear = 1'b1;
-            if(capture) begin
-                increment = 1'b1;
+            if(capture)
                 next_state = READING;
-            end
             else
                 next_state = IDLE;
         end
 
         READING: begin
-            increment = 1'b1;
-            if(capture)
+            if(capture) begin
+                increment = 1'b1;
                 next_state = READING;
-            else
+            end
+            else begin
+                show = 1'b1;
                 next_state = OUTPUT;
+            end
         end
 
         OUTPUT: begin
-            show = 1'b1;
             next_state = IDLE;
         end
     endcase

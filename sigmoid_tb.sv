@@ -4,7 +4,7 @@
 module sigmoid_tb;
 
 
-const int bitstream_length = 256;
+const int bitstream_length = 65536;
 
 
 logic clk;
@@ -13,21 +13,28 @@ logic n_rst;
 int x = 0;
 logic z;
 logic y;
+logic w;
 
 real value = 0;
 
 int dataFile;
 
 
-generator x_gen(
+generator16 x_gen(
     .clk(clk),
     .n_rst(n_rst),
     .x(x),
     .y(z)
 );
-defparam x_gen.SEED = 8'b10001100;
+defparam x_gen.SEED = 8'b11001100;
 
-sigmoid sig(
+// sigmoid sig(
+//     .clk(clk),
+//     .n_rst(n_rst),
+//     .x(z),
+//     .y(y)
+// );
+relu rel(
     .clk(clk),
     .n_rst(n_rst),
     .x(z),
@@ -54,10 +61,13 @@ initial begin
                 value++;
         end
 
+        // #20ps n_rst = 1'b0;
+        // #20ps n_rst = 1'b1;
+
         $fwrite(dataFile, "%f\n", value/bitstream_length);
     end
 
-    $fclose();
+    $fclose(dataFile);
     $stop();
 end
 

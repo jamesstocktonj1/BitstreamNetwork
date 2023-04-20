@@ -38,7 +38,8 @@ initial begin
     data_in = {22, 210};
 
     #50ps control_in = 8'b00000001;
-    #50ps control_in = 8'b00000000;
+    #3000ps control_in = 8'b00000000;
+
 end
 
 endmodule

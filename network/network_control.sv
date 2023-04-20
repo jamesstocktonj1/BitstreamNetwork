@@ -10,7 +10,7 @@ module network_control #(INPUT_SIZE=2, OUTPUT_SIZE=1)(input logic [7:0] control_
 parameter BITSTREAM_LENGTH = 256;
 
 // define state machine states
-typedef enum logic [1:0] {IDLE, COMPUTE, INTEGRATE} network_state;
+typedef enum logic [3:0] {IDLE, COMPUTE, INTEGRATE} network_state;
 network_state state, next_state = IDLE;
 
 
@@ -23,13 +23,14 @@ assign ctrl_rst = control_in[0];
 // define control output signals
 logic finish_compute;
 assign control_out[0] = finish_compute;
-assign control_out[7:6] = state;
+assign control_out[7:4] = state;
 
 
 // local state variables
 logic compute_value, n_netrst;
 int bitstream_place;
-assign n_netrst = (~ctrl_rst) && n_rst;
+assign n_netrst = n_rst;
+// assign n_netrst = (~ctrl_rst) && n_rst;
 
 
 
@@ -50,7 +51,7 @@ always_ff @(posedge clk, negedge n_rst) begin
     else if(compute_value)
         bitstream_place <= bitstream_place + 1;
     else
-        bitstream_place <= bitstream_place;
+        bitstream_place <= 0;
 end
 
 
@@ -83,17 +84,22 @@ always_comb begin
         end
 
         COMPUTE: begin
-            compute_value = 1'b1;
-            if(bitstream_place < (BITSTREAM_LENGTH-1))
+            if(bitstream_place < (BITSTREAM_LENGTH-1)) begin
+                compute_value = 1'b1;
                 next_state = COMPUTE;
-            else
+            end
+            else begin
+                compute_value = 1'b0;
                 next_state = INTEGRATE;
+            end
         end
 
         INTEGRATE: begin
-            compute_value = 1'b0;
             finish_compute = 1'b1;
-            next_state = IDLE;
+            if(~start_compute)
+                next_state = IDLE;
+            else
+                next_state = INTEGRATE;
         end
     endcase
 end
