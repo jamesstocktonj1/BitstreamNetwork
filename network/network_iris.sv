@@ -9,7 +9,6 @@ module network #(parameter INPUT_SIZE = 4, OUTPUT_SIZE = 3, SEED = 25)
 parameter layer12_size = 5;
 parameter layer23_size = 5;
 
-// const int layer12_size = 2;
 logic [INPUT_SIZE-1:0] network_bitstream_input;
 logic [OUTPUT_SIZE-1:0] network_bitstream_output;
 logic [layer12_size-1:0] layer12_connect;
