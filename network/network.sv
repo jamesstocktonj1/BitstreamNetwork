@@ -22,7 +22,7 @@ int w1 [0:layer12_size-1][0:INPUT_SIZE-1] = '{
     '{230, 128, 249, 140},
     '{ 28,  85, 113,  87},
     '{ 44,  72, 205, 121}
-}
+};
 // Bias 1
 int b1 [0:layer12_size-1] = '{
     60,
@@ -54,7 +54,7 @@ int w3 [0:OUTPUT_SIZE-1][0:layer23_size-1] = '{
     '{  1,   0,  19,   1,   0},
     '{ 53,  68,   3,   4, 113},
     '{  1,  46,   1,   1, 164}
-}
+};
 // Bias 3
 int b3 [0:OUTPUT_SIZE-1] = '{
     35,
@@ -65,7 +65,7 @@ int b3 [0:OUTPUT_SIZE-1] = '{
 generate
     genvar i;
     for(i=0; i<INPUT_SIZE; i++) begin : generator_block
-        generator #(.SEED(SEED + (i * 5))) bitstream_gen (
+        generator16 #(.SEED(SEED + (i * 235))) bitstream_gen (
             .clk(clk),
             .n_rst(n_rst),
             .x(network_input[i]),
@@ -75,7 +75,7 @@ generate
 endgenerate
 
 
-layer #(.INPUT_SIZE(INPUT_SIZE), .NEURON_COUNT(layer12_size), .SEED(SEED)) layer1 (
+layer #(.INPUT_SIZE(INPUT_SIZE), .NEURON_COUNT(layer12_size), .SEED(SEED+420)) layer1 (
     .clk(clk),
     .n_rst(n_rst),
     .layer_weights(w1),
@@ -84,7 +84,7 @@ layer #(.INPUT_SIZE(INPUT_SIZE), .NEURON_COUNT(layer12_size), .SEED(SEED)) layer
     .layer_output(layer12_connect)
 );
 
-layer #(.INPUT_SIZE(layer12_size), .NEURON_COUNT(layer23_size), .SEED(SEED + (layer12_size * OUTPUT_SIZE))) layer2 (
+layer #(.INPUT_SIZE(layer12_size), .NEURON_COUNT(layer23_size), .SEED(SEED + (layer12_size * OUTPUT_SIZE * 120))) layer2 (
     .clk(clk),
     .n_rst(n_rst),
     .layer_weights(w2),
@@ -93,7 +93,7 @@ layer #(.INPUT_SIZE(layer12_size), .NEURON_COUNT(layer23_size), .SEED(SEED + (la
     .layer_output(layer23_connect)
 );
 
-layer #(.INPUT_SIZE(layer23_size), .NEURON_COUNT(OUTPUT_SIZE), .SEED(SEED + (layer23_size * OUTPUT_SIZE))) layer3 (
+layer_nac #(.INPUT_SIZE(layer23_size), .NEURON_COUNT(OUTPUT_SIZE), .SEED(SEED + (layer12_size * OUTPUT_SIZE * 32) + (layer23_size * OUTPUT_SIZE * 82))) layer3 (
     .clk(clk),
     .n_rst(n_rst),
     .layer_weights(w3),

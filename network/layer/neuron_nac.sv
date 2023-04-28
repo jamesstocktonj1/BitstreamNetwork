@@ -17,7 +17,7 @@ logic neuron_active;
 
 assign neuron_active = neuron_sum;
 
-generator #(.SEED(SEED+1)) bias_gen(
+generator16 #(.SEED(SEED+1)) bias_gen(
     .clk(clk),
     .n_rst(n_rst),
     .x(bias_value),
@@ -27,7 +27,7 @@ generator #(.SEED(SEED+1)) bias_gen(
 generate
     genvar i;
     for(i=0; i<INPUT_SIZE; i++) begin : weight_block
-        generator #(.SEED(SEED + i + 2)) weight_gen(
+        generator16 #(.SEED(SEED + i + 2)) weight_gen(
             .clk(clk),
             .n_rst(n_rst),
             .x(weight_values[i]),

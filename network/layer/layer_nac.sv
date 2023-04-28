@@ -12,7 +12,7 @@ module layer_nac #(INPUT_SIZE = 2, SEED = 0, NEURON_COUNT = 2)
 generate
     genvar i;
     for(i=0; i<NEURON_COUNT; i++) begin : neuron_block
-        neuron_nac #(.INPUT_SIZE(INPUT_SIZE), .SEED(SEED + (i * NEURON_COUNT))) neuron_gen(
+        neuron_nac #(.INPUT_SIZE(INPUT_SIZE), .SEED(SEED + (i * NEURON_COUNT * 12))) neuron_gen(
             .clk(clk),
             .n_rst(n_rst),
             .weight_values(layer_weights[i]),
