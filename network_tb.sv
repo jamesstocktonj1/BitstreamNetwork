@@ -7,8 +7,8 @@ const int bitstream_length = 256;
 
 logic clk, n_rst, compute;
 
-int x [0:3];
-int y [0:2];
+int x [0:1];
+int y [0:0];
 
 int i = 0;
 int j = 0;
@@ -677,10 +677,8 @@ int iris_data [0:149][0:3] = {
 };
 
 
-assign x[0] = iris_data[j][0];
-assign x[1] = iris_data[j][1];
-assign x[2] = iris_data[j][2];
-assign x[3] = iris_data[j][3];
+assign x[0] = data_perceptron1[j];
+assign x[1] = data_perceptron2[j];
 
 network n(
     .clk(clk),
@@ -693,7 +691,7 @@ network n(
 
 
 initial begin
-    dataFile = $fopen("data/iris.txt", "w");
+    dataFile = $fopen("data/separation.txt", "w");
 
     clk = 1'b0;
     n_rst = 1'b1;
@@ -703,7 +701,7 @@ initial begin
     #20ps n_rst = 1'b1;
 
 
-	for(j=0; j<150; j++) begin
+	for(j=0; j<250; j++) begin
 		compute = 1'b1;
 
 		for(i=0; i<bitstream_length; i++) begin
@@ -715,7 +713,7 @@ initial begin
 		#10ps clk = ~clk;
 		#10ps clk = ~clk;
 
-		$fwrite(dataFile, "%f,%f,%f\n", real'(y[0])/bitstream_length, real'(y[1])/bitstream_length, real'(y[2])/bitstream_length);
+		$fwrite(dataFile, "%f\n", real'(y[0])/bitstream_length);
 	end
 
     $fclose();
